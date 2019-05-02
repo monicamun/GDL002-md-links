@@ -27,13 +27,14 @@ module.exports = async function mdLinks(inputPath, options) {
   });
 
   if (typeof options !== 'undefined' && options && options.validate) {
-    let resultPromise = linkInfoResults.map(linkInfo => {
+    let resultPromiseArray = linkInfoResults.map(linkInfo => {
       let validationPromise = validateLink(linkInfo);
       let validatedLinkInfo = validationPromise
         .then(validationResult => {
+          // destructuring
           ({ href, text, file } = linkInfo);
           return {
-            href,
+            href, // igual que href: href
             text,
             file,
             status: validationResult.status,
@@ -45,7 +46,8 @@ module.exports = async function mdLinks(inputPath, options) {
       return validatedLinkInfo;
     });
 
-    return Promise.all(resultPromise).then(results => results);
+    // resuelve todas las promesas del arreglo y resuelve a un arreglo con los valores
+    return Promise.all(resultPromiseArray);
   } else {
     return linkInfoResults;
   }
